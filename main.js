@@ -1,6 +1,3 @@
-//main.js contains code to start server using node.js
-
-
 var http = require("http");
 var DAO = require("./DAO");
 var express = require('express');
@@ -16,7 +13,6 @@ var reqID = 1;
  * @param resp The HTTP response object.
  */
 function serverCore(req, resp) {
-
   try {
 
     reqID = reqID + 1;
@@ -62,7 +58,7 @@ function serverCore(req, resp) {
     }
 
     // At this point, ident should be either an operation type (meaning
-    // "appointment", "contact", "note" or "task") or it's a valid ID of an
+    // "list", "user", or "deal") or it's a valid ID of an
     // item.  We need to ensure that the value is either null or is a valid ID.
     // Null is acceptable in the case of a "get all" request, but it's that
     // case where we'd have an operation type at this point (or in the case of
@@ -95,15 +91,15 @@ function serverCore(req, resp) {
           body = "";
         }
         dataObj.data = JSON.parse(body);
-        serverCorePart2(dataObj);
-      });
+        serverCorePart2(dataObj);//10-28-15 this line was throwing exeception
+      });						 //due to invalid JSON format and crashing the server.
+								 //JSON fixed on client side, but unsure about avoiding future crashes
 
     // Not a supported HTTP method.
     } else {
 
       console.log(dataObj.id + ": Unsupported method: " + req.method);
-      completeResponse(
-        dataObj, 405, "text", "Unsupported method: " + req.method
+      completeResponse(dataObj, 405, "text", "Unsupported method: " + req.method
       );
 
     }
@@ -142,9 +138,7 @@ function serverCorePart2(dataObj) {
       opType = "clear";
     } else {
       console.log(dataObj.id + ": Unsupported operation: " + dataObj.req.url);
-      completeResponse(
-        dataObj, 403, "text", "Unsupported operation: " + dataObj.req.url
-      );
+      completeResponse(dataObj, 403, "text", "Unsupported operation: " + dataObj.req.url);
       return;
     }
 
@@ -184,9 +178,7 @@ completeResponse = function(dataObj, statusCode, contentType, content) {
   if (contentType == "json") {
     ct = "application/json";
   }
-  dataObj.resp.writeHead(
-    statusCode, { "Content-Type" : ct, "Access-Control-Allow-Origin" : "*" }
-  );
+  dataObj.resp.writeHead(statusCode, { "Content-Type" : ct, "Access-Control-Allow-Origin" : "*" });
   dataObj.resp.end(content);
 
 } // End completeResponse().

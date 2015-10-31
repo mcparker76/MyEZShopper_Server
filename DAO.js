@@ -1,6 +1,6 @@
 // ****************************************************************************
 // Data Access Object for CRUD operations against the database.
-// includes schemas, models
+//
 // ****************************************************************************
 
 
@@ -67,7 +67,7 @@ function POST(opType, dataObj) {
 /**
  * GET: (R)ead.
  *
- * @param opType  The type of operation (appointment, contact, note or task).
+ * @param opType  The type of operation (list, appointment, or user).
  * @param dataObj The data object built during the core server processing.
  */
 function GET(opType, dataObj) {
@@ -130,7 +130,7 @@ function GET_ALL(opType, dataObj) {
 /**
  * PUT: (U)pdate.
  *
- * @param opType  The type of operation (appointment, contact, note or task).
+ * @param opType  The type of operation (list, appointment, or user).
  * @param dataObj The data object built during the core server processing.
  */
 function PUT(opType, dataObj) {
@@ -154,7 +154,7 @@ function PUT(opType, dataObj) {
 /**
  * DELETE: (D)elete.
  *
- * @param opType  The type of operation (appointment, contact, note or task).
+ * @param opType  The type of operation (list, appointment, or user).
  * @param dataObj The data object built during the core server processing.
  */
 function DELETE(opType, dataObj) {
