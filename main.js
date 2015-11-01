@@ -1,6 +1,5 @@
 var http = require("http");
 var DAO = require("./DAO");
-var express = require('express');
 
 // A variable that gets incremented with each request so we get a unique ID
 // for every request to be able to track log messages better.
