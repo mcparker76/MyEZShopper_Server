@@ -100,22 +100,31 @@ function GET(opType, dataObj) {
  */
 function GET_ALL(opType, dataObj) {
 
-  console.log(dataObj.id + ": DAO.POST(): " + opType);
+  console.log(dataObj.id + ": DAO.GET_ALL(): " + opType);
 
   // Set up sorting of results.  This doesn't actually matter since we
   // effectively lose this order once it hits localStorage on the client, but
   // it's good to see how to do this none the less.
   var opts = { sort : { } };
   switch (opType) {
-    case "contact":
-      opts.sort.lastName = 1;
+    case "user": case "list":
+      opts.sort.name = 1;
     break;
-    case "appointment": case "note": case "task":
-      opts.sort.title = 1;
+    case "deal":
+      opts.sort.productName = 1;
     break;
   }
-
-  models[opType].find(null, null, opts, function (inError, inObjs) {
+	
+  // Create conditions object to enable querying	
+  var conditions = {
+	query:null,
+	queryValue:null
+  }
+  conditions.query = dataObj.query;
+  conditions.queryValue =dataObj.queryValue;
+  
+	  
+  models[opType].find(conditions, null, opts, function (inError, inObjs) {
     if (inError) {
       throw "Error: " + JSON.stringify(inError);
     } else {

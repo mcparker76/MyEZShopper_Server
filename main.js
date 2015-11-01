@@ -24,7 +24,8 @@ function serverCore(req, resp) {
     // ident .. identifier (final /xxxx on url)
     var dataObj = {
       id : new Date().getTime() + reqID, req : req, resp : resp,
-      data : null, ident : null
+      data : null, ident : null,
+	  query:null, queryValue:null
     };
 
     console.log(dataObj.id + ": " + req.method + " " + req.url);
@@ -54,6 +55,14 @@ function serverCore(req, resp) {
     // so for any method other than POST we'll get that value now.
     if (req.method != "POST") {
       dataObj.ident = req.url.substr(req.url.lastIndexOf("/") + 1);
+	  console.log("IDENT: " + dataObj.ident);
+	  
+		// Put on the object a query and query value of they exist.		  
+		if (dataObj.req.url.toLowerCase().indexOf("?name") != -1)
+		dataObj.query = 'name';
+ 
+		if (dataObj.req.url.toLowerCase().indexOf("=") != -1)
+		dataObj.queryValue = req.url.substr(req.url.lastIndexOf("=") + 1);	
     }
 
     // At this point, ident should be either an operation type (meaning
@@ -124,7 +133,6 @@ function serverCorePart2(dataObj) {
     // Log input data.
     console.log(dataObj.id + ": ident: " + dataObj.ident);
     console.log(dataObj.id + ": data: " + JSON.stringify(dataObj.data));
-
     // See if we have a supported operation.  If not, return an error.
     var opType = "";
     if (dataObj.req.url.toLowerCase().indexOf("/list") != -1) {
