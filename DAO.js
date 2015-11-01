@@ -11,13 +11,13 @@ var mongoose = require("mongoose");
 // Define database schemas for all entities.
 var schemas = {
   list : mongoose.Schema({
-    name:"string", date:"date",
+    name:"string", date:"string",
 	description:"string"
   }),
   deal : mongoose.Schema({
     productName:"string", dateAdded:"date",
 	price:"number", storeName:"string",
-	location:"string", expirationDate:"date",
+	location:"string", expirationDate:"string",
 	description:"string",category:"string",
 	upCount:"number", downCount:"number",
 	user:"string"
