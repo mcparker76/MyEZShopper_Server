@@ -123,11 +123,10 @@ function GET_ALL(opType, dataObj) {
   conditions.query = dataObj.query;
   conditions.queryValue =dataObj.queryValue;
   
-	  
   models[opType].find(conditions, null, opts, function (inError, inObjs) {
     if (inError) {
       throw "Error: " + JSON.stringify(inError);
-    } else {
+	} else {
       console.log(dataObj.id + ": Success: " + JSON.stringify(inObjs));
       completeResponse(dataObj, 200, "json", JSON.stringify(inObjs));
     }
