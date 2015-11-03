@@ -115,15 +115,15 @@ function GET_ALL(opType, dataObj) {
     break;
   }
 	
-  // Create conditions object to enable querying	
-  var conditions = {
-	query:null,
-	queryValue:null
-  }
-  conditions.query = dataObj.query;
-  conditions.queryValue =dataObj.queryValue;
   
-  models[opType].find(conditions, null, opts, function (inError, inObjs) {
+  //Create an object for the query
+  //If dataObj.query and dataObj.querValue are null, then all records retrieved
+  //Otherwise, the query will be executed returning desired records.
+  var condition = {};
+  condition[dataObj.query] = dataObj.queryValue;
+  
+  
+  models[opType].find(condition, null, opts, function (inError, inObjs) {
     if (inError) {
       throw "Error: " + JSON.stringify(inError);
 	} else {
