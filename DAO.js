@@ -15,13 +15,18 @@ var schemas = {
 	description:"string"
   }),
   deal : mongoose.Schema({
-    productName:"string", dateAdded:"date",
+    name:"string", 
 	price:"number", storeName:"string",
 	location:"string", expirationDate:"string",
-	description:"string",category:"string",
-	upCount:"number", downCount:"number",
-	user:"string"
+	description:"string",category:"string"
   }),
+  
+/*  following removed from deal schema temporarily
+	upCount:"number", downCount:"number",
+	user:"string", dateAdded:"date"
+  }),
+*/  
+
   user : mongoose.Schema({
     name:"string", password:"string"
   })
