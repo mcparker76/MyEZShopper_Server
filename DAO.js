@@ -119,13 +119,30 @@ function GET_ALL(opType, dataObj) {
       opts.sort.productName = 1;
     break;
   }
-	
   
+  //Check if query value contains multiple words
+  var qv = "";
+  if (dataObj.queryValue == null){
+	  qv = null; 
+  }else if (dataObj.queryValue.indexOf('+') != - 1){
+	  //Need to tokenize dataObj.queryValue
+	  var tokens = dataObj.queryValue.split('+');
+	  for (index in tokens){
+		  qv += tokens[index] + ' ';
+	  }
+	  //trim off last space
+	  qv = qv.substring(0, qv.length - 1);
+  }
+  else{
+	  qv = dataObj.queryValue;
+  }
+	  
+  console.log("qv: " + qv);
   //Create an object for the query
   //If dataObj.query and dataObj.querValue are null, then all records retrieved
   //Otherwise, the query will be executed returning desired records.
   var condition = {};
-  condition[dataObj.query] = dataObj.queryValue;
+  condition[dataObj.query] = qv;
   
   
   models[opType].find(condition, null, opts, function (inError, inObjs) {
