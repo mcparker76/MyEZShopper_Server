@@ -58,19 +58,17 @@ function POST(opType, dataObj) {
   var obj = new models[opType](dataObj.data);
   
   if (opType == "user"){
-	console.log("USER: " + dataObj.data);
 	
-	var name = {};
-	name["name"] = dataObj.data["name"];
-	
-	console.log(dataObj.data["name"] + ", " + name.name);
+	var newUser = {};
+	newUser["name"] = dataObj.data["name"];
 	  
 	//see if the username already exists
-	models[opType].findOne(name, function(err, user){
+	models[opType].findOne(newUser, function(err, user){
 		if (err){
 			console.log("ERROR: " + err);
-			completeResponse(dataObj, 500, "text", "" + inObj._id);
-		}else if (!user){
+			completeResponse(dataObj, 500, "text", "");
+		}else if (!user && dataObj.data["type"]=="register"){
+			//new registration
 			 console.log(dataObj.id + ": obj: " + JSON.stringify(obj));
 				obj.save(function (inError, inObj) {
 				if (inError) {
@@ -80,10 +78,25 @@ function POST(opType, dataObj) {
 				  completeResponse(dataObj, 200, "text", "" + inObj._id);
 				}
 			});
+		}else if (user){
+			  console.log("user exists!");
+			  
+			  newUser["password"] = dataObj.data["password"];
+			  
+			  //check if password matches
+			  if (newUser.password == user.password && dataObj.data["type"]=="login"){
+				  console.log("PASSWORD and NAME MATCH!!");
+				  completeResponse(dataObj, 200, "text", "" + user._id);
+			  }else{
+				console.log("PASSWORD and NAME DO NOT MATCH!!");
+				completeResponse(dataObj, 403, "text", ""); 
+			  }
+			  
+
 		}else{
-			  console.log("user already exists");
-			  completeResponse(dataObj, 403, "text", "");
-		}
+			console.log("LOGIN ATTEMPT w/ invalid credentials");
+			completeResponse(dataObj, 404, "text", "");
+		}		
 	});
 	  
   }
