@@ -126,25 +126,25 @@ function GET(opType, dataObj) {
   console.log(dataObj.id + ": DAO.GET() READ : " + opType);
   
   if (opType == "user"){
-	  console.log("YES");
+	  completeResponse(null, 401, "", "");
   }
-
-  models[opType].findById(dataObj.ident,
-    function (inError, inObj) {
-      if (inError) {
-        throw "Error: " + JSON.stringify(inError);
-      } else {
-        if (inObj == null) {
-          console.log(dataObj.id + ": Object not found");
-          completeResponse(dataObj, 404, "json", "");
+  else{
+	models[opType].findById(dataObj.ident,
+      function (inError, inObj) {
+        if (inError) {
+          throw "Error: " + JSON.stringify(inError);
         } else {
-          console.log(dataObj.id + ": Success: " + JSON.stringify(inObj));
-          completeResponse(dataObj, 200, "json", JSON.stringify(inObj));
+          if (inObj == null) {
+            console.log(dataObj.id + ": Object not found");
+            completeResponse(dataObj, 404, "json", "");
+          } else {
+            console.log(dataObj.id + ": Success: " + JSON.stringify(inObj));
+            completeResponse(dataObj, 200, "json", JSON.stringify(inObj));
+          }
         }
       }
-    }
-  );
-
+    );
+  }
 } // End GET().
 
 
@@ -193,17 +193,19 @@ function GET_ALL(opType, dataObj) {
   var condition = {};
   condition[dataObj.query] = qv;
   
-  
-  models[opType].find(condition, null, opts, function (inError, inObjs) {
-    if (inError) {
-      throw "Error: " + JSON.stringify(inError);
-	} else {
-      console.log(dataObj.id + ": Success: " + JSON.stringify(inObjs));
-      completeResponse(dataObj, 200, "json", JSON.stringify(inObjs));
-    }
-  });
-
-} // End GET_ALL().
+    if (opType == "user"){
+	  completeResponse(dataObj, 401, "", "");
+    }else{
+      models[opType].find(condition, null, opts, function (inError, inObjs) {
+        if (inError) {
+        throw "Error: " + JSON.stringify(inError);
+	    } else {
+          console.log(dataObj.id + ": Success: " + JSON.stringify(inObjs));
+          completeResponse(dataObj, 200, "json", JSON.stringify(inObjs));
+        }
+      });		
+	}
+  } // End GET_ALL().
 
 
 /**
