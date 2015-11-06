@@ -58,9 +58,13 @@ function serverCore(req, resp) {
 	  console.log("IDENT: " + dataObj.ident);
 	  
 		// Put on the object a query and query value of they exist.		  
-		if (dataObj.req.url.toLowerCase().indexOf("?name") != -1)
-		dataObj.query = 'name';
- 
+		if (dataObj.req.url.toLowerCase().indexOf("?") != -1){
+			var start = (dataObj.ident.indexOf("?")) + 1;
+			var end = (dataObj.ident.indexOf("=")) - 1;
+			var qn = dataObj.ident.substring(start, end + 1);
+			dataObj.query = qn;
+		}
+		
 		if (dataObj.req.url.toLowerCase().indexOf("=") != -1)
 		dataObj.queryValue = req.url.substr(req.url.lastIndexOf("=") + 1);	
     }

@@ -54,10 +54,42 @@ mongoose.connect("localhost", "MyEZShopper");
 function POST(opType, dataObj) {
 
   console.log(dataObj.id + ": DAO.POST() - CREATE : " + opType);
-
+  
   var obj = new models[opType](dataObj.data);
-  console.log(dataObj.id + ": obj: " + JSON.stringify(obj));
-  obj.save(function (inError, inObj) {
+  
+  if (opType == "user"){
+	console.log("USER: " + dataObj.data);
+	
+	var name = {};
+	name["name"] = dataObj.data["name"];
+	
+	console.log(dataObj.data["name"] + ", " + name.name);
+	  
+	//see if the username already exists
+	models[opType].findOne(name, function(err, user){
+		if (err){
+			console.log("ERROR: " + err);
+			completeResponse(dataObj, 500, "text", "" + inObj._id);
+		}else if (!user){
+			 console.log(dataObj.id + ": obj: " + JSON.stringify(obj));
+				obj.save(function (inError, inObj) {
+				if (inError) {
+				throw "Error: " + JSON.stringify(inError);
+				} else {
+				  console.log(dataObj.id + ": Success: " + inObj._id);
+				  completeResponse(dataObj, 200, "text", "" + inObj._id);
+				}
+			});
+		}else{
+			  console.log("user already exists");
+			  completeResponse(dataObj, 403, "text", "");
+		}
+	});
+	  
+  }
+  else{
+    console.log(dataObj.id + ": obj: " + JSON.stringify(obj));
+    obj.save(function (inError, inObj) {
     if (inError) {
       throw "Error: " + JSON.stringify(inError);
     } else {
@@ -65,6 +97,7 @@ function POST(opType, dataObj) {
       completeResponse(dataObj, 200, "text", "" + inObj._id);
     }
   });
+  }
 
 } // End POST().
 
@@ -78,6 +111,10 @@ function POST(opType, dataObj) {
 function GET(opType, dataObj) {
 
   console.log(dataObj.id + ": DAO.GET() READ : " + opType);
+  
+  if (opType == "user"){
+	  console.log("YES");
+  }
 
   models[opType].findById(dataObj.ident,
     function (inError, inObj) {
@@ -137,7 +174,6 @@ function GET_ALL(opType, dataObj) {
 	  qv = dataObj.queryValue;
   }
 	  
-  console.log("qv: " + qv);
   //Create an object for the query
   //If dataObj.query and dataObj.querValue are null, then all records retrieved
   //Otherwise, the query will be executed returning desired records.
