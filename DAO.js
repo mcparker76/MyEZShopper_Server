@@ -166,7 +166,7 @@ function GET_ALL(opType, dataObj) {
       opts.sort.name = 1;
     break;
     case "deal":
-      opts.sort.productName = 1;
+      opts.sort.expirationDate = 1;
     break;
   }
   
