@@ -28,7 +28,8 @@ var schemas = {
 */  
 
   user : mongoose.Schema({
-    name:"string", password:"string"
+    name:"string", password:"string",
+	loginAttempts:"number"
   })
 };
 
@@ -79,7 +80,7 @@ function POST(opType, dataObj) {
 				}
 			});
 		}else if (user){
-			  console.log("user exists!");
+			  console.log("userName exists!");
 			  
 			  newUser["password"] = dataObj.data["password"];
 			  
@@ -89,6 +90,7 @@ function POST(opType, dataObj) {
 				  completeResponse(dataObj, 200, "text", "" + user._id);
 			  }else{
 				console.log("PASSWORD and NAME DO NOT MATCH!!");
+				//Password reset will be here
 				completeResponse(dataObj, 403, "text", ""); 
 			  }
 			  
@@ -162,7 +164,7 @@ function GET_ALL(opType, dataObj) {
   // it's good to see how to do this none the less.
   var opts = { sort : { } };
   switch (opType) {
-    case "user": case "list":
+    case "list":
       opts.sort.name = 1;
     break;
     case "deal":
