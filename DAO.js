@@ -7,7 +7,6 @@
 // Imports.
 var mongoose = require("mongoose");
 
-
 // Define database schemas for all entities.
 var schemas = {
   list : mongoose.Schema({
@@ -26,10 +25,10 @@ var schemas = {
 	user:"string", dateAdded:"date"
   }),
 */  
-
+  
   user : mongoose.Schema({
     name:"string", password:"string",
-	loginAttempts:"number"
+	loginAttempts:"number", list: []
   })
 };
 
@@ -87,10 +86,13 @@ function POST(opType, dataObj) {
 			  //check if password matches
 			  if (newUser.password == user.password && dataObj.data["type"]=="login"){
 				  console.log("PASSWORD and NAME MATCH!!");
+				  //todo reset number of login attempts
 				  completeResponse(dataObj, 200, "text", "" + user._id);
 			  }else{
 				console.log("PASSWORD and NAME DO NOT MATCH!!");
 				//Password reset will be here
+				
+				
 				completeResponse(dataObj, 403, "text", ""); 
 			  }
 			  
@@ -127,10 +129,7 @@ function GET(opType, dataObj) {
 
   console.log(dataObj.id + ": DAO.GET() READ : " + opType);
   
-  if (opType == "user"){
-	  completeResponse(null, 401, "", "");
-  }
-  else{
+
 	models[opType].findById(dataObj.ident,
       function (inError, inObj) {
         if (inError) {
@@ -146,7 +145,7 @@ function GET(opType, dataObj) {
         }
       }
     );
-  }
+
 } // End GET().
 
 
