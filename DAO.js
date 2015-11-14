@@ -16,7 +16,7 @@ var schemas = {
   deal : mongoose.Schema({
     name:"string", 
 	price:"number", storeName:"string",
-	location:"string", expirationDate:"string",
+	location:"string", expirationDate:"date",
 	description:"string",category:"string"
   }),
   
