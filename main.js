@@ -84,7 +84,6 @@ function serverCore(req, resp) {
     // If it's a GET or DELETE request then we're done here, simply call
     // serverCorePart2() to continue the process.
     if (req.method == "GET" || req.method == "DELETE") {
-
       serverCorePart2(dataObj);
 
     // If it's a POST or PUT request then we have to get the body content.
