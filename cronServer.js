@@ -11,8 +11,9 @@ var deal = mongoose.model('Deal', schema);
 
 // Connect to database.
 mongoose.connect("localhost", "MyEZShopper");
-
-var cronJob = cron.job('00 35 17 * * 1-7', function(){
+//database deletes entries from current date every 5 minutes.
+var cronJob = cron.job('0 */5 * * * *', function(){
+    console.log("Time to start");
     // perform operation e.g. GET request http.get() etc.
 	var currDate = new Date();
 	console.log("Month: " + (currDate.getMonth()+1));
@@ -28,4 +29,5 @@ var cronJob = cron.job('00 35 17 * * 1-7', function(){
 	
     console.info('cron job completed');
 }); 
+
 cronJob.start();
