@@ -22,7 +22,7 @@ var cronJob = cron.job('0 */3 * * * *', function(){
 	console.log("Day: " + currDate.getDate());
 	console.log("Year: " + currDate.getFullYear());
 	
-	var testing = moment(currDate.getTime()).utcOffset(-180).format('YYYY-MM-DD');
+	var testing = moment(currDate.getTime()).utcOffset(-300).format('YYYY-MM-DD');
 	console.log("TESTING: " + testing);
 	currDate = new Date(testing);
 	var expDate = Date.parse((currDate.getMonth() + 1) + "-" + currDate.getDate() + "-" + currDate.getFullYear());
