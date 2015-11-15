@@ -1,5 +1,7 @@
 var cron = require('cron');
 var mongoose = require('mongoose');
+var moment = require('moment');
+
 var schema = new mongoose.Schema({
     name:"string", 
 	price:"number", storeName:"string",
@@ -11,20 +13,23 @@ var deal = mongoose.model('Deal', schema);
 
 // Connect to database.
 mongoose.connect("localhost", "MyEZShopper");
-//database deletes entries from current date every 1 minute
-var cronJob = cron.job('0 * * * * *', function(){
+
+//database deletes entries from current date every 3 minutes
+var cronJob = cron.job('0 */3 * * * *', function(){
 
 	var currDate = new Date();
 	console.log("Month: " + (currDate.getMonth()+1));
 	console.log("Day: " + currDate.getDate());
 	console.log("Year: " + currDate.getFullYear());
-    console.log("TZ Offset: " + currDate.getTimezoneOffset());
-	var expDate = Date.parse((currDate.getMonth() + 1) + "-" + currDate.getDate() + "-" + currDate.getFullYear() + " 00:00");
+	
+	var testing = moment(currDate.getTime()).utcOffset(-180).format('YYYY-MM-DD');
+	console.log("TESTING: " + testing);
+	currDate = new Date(testing);
+	var expDate = Date.parse((currDate.getMonth() + 1) + "-" + currDate.getDate() + "-" + currDate.getFullYear());
 	console.log(expDate);
 	
 	deal.remove({expirationDate:expDate}, function(err){
 		if (err){ return handleError(err);console.log("ERROR");}
-		else console.log("HERE");
 	});
 	
     console.info('cron job completed');
