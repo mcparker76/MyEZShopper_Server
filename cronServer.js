@@ -11,14 +11,14 @@ var deal = mongoose.model('Deal', schema);
 
 // Connect to database.
 mongoose.connect("localhost", "MyEZShopper");
-//database deletes entries from current date every 5 minutes.
-var cronJob = cron.job('0 */5 * * * *', function(){
-    console.log("Time to start");
-    // perform operation e.g. GET request http.get() etc.
+//database deletes entries from current date every 1 minute
+var cronJob = cron.job('0 * * * * *', function(){
+
 	var currDate = new Date();
 	console.log("Month: " + (currDate.getMonth()+1));
 	console.log("Day: " + currDate.getDate());
 	console.log("Year: " + currDate.getFullYear());
+    console.log("TZ Offset: " + currDate.getTimezoneOffset());
 	var expDate = Date.parse((currDate.getMonth() + 1) + "-" + currDate.getDate() + "-" + currDate.getFullYear() + " 00:00");
 	console.log(expDate);
 	
