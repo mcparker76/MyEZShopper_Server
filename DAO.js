@@ -9,10 +9,6 @@ var mongoose = require("mongoose");
 
 // Define database schemas for all entities.
 var schemas = {
-  list : mongoose.Schema({
-    name:"string", date:"string",
-	description:"string"
-  }),
   deal : mongoose.Schema({
     name:"string", 
 	price:"number", storeName:"string",
@@ -23,7 +19,6 @@ var schemas = {
 /*  following removed from deal schema temporarily
 	upCount:"number", downCount:"number",
 	user:"string", dateAdded:"date"
-  }),
 */  
   
   user : mongoose.Schema({
@@ -35,7 +30,6 @@ var schemas = {
 
 // Define database models for all entities.
 var models = {
-  list : mongoose.model("list", schemas.list),
   deal : mongoose.model("deal", schemas.deal),
   user : mongoose.model("user", schemas.user),
 }
@@ -163,9 +157,6 @@ function GET_ALL(opType, dataObj) {
   // it's good to see how to do this none the less.
   var opts = { sort : { } };
   switch (opType) {
-    case "list":
-      opts.sort.name = 1;
-    break;
     case "deal":
       opts.sort.expirationDate = 1;
     break;
@@ -212,7 +203,7 @@ function GET_ALL(opType, dataObj) {
 /**
  * PUT: (U)pdate.
  *
- * @param opType  The type of operation (list, appointment, or user).
+ * @param opType  The type of operation (deal or user).
  * @param dataObj The data object built during the core server processing.
  */
 function PUT(opType, dataObj) {
@@ -303,3 +294,36 @@ exports.PUT = PUT;
 exports.DELETE = DELETE;
 exports.GET_ALL = GET_ALL;
 exports.CLEAR_DATA = CLEAR_DATA;
+
+
+var cron = require('cron');
+var moment = require('moment');
+
+var schema = new mongoose.Schema({
+    name:"string", 
+	price:"number", storeName:"string",
+	location:"string", expirationDate:"date",
+	description:"string",category:"string"
+  });
+
+var deal = mongoose.model('Deal', schema);
+
+var cronJob = cron.job('*/45 * * * * *', function(){
+	
+	var currDate = new Date(moment().utcOffset(-300).format('MM/DD/YYYY'));
+
+	console.log("CURR DATE: " + currDate.getTime());
+	console.log("Month: " + (currDate.getMonth()+1));
+	console.log("Day: " + currDate.getDate());
+	console.log("Year: " + currDate.getFullYear());
+
+	deal.find({expirationDate: {$lt:currDate}}).remove().exec();
+	/*
+	deal.remove({expirationDate:expDate}, function(err){
+		if (err){ return handleError(err);console.log("ERROR");}
+	});*/
+	
+    console.info('cron job completed');
+}); 
+
+cronJob.start();
