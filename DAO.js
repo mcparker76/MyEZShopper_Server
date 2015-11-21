@@ -22,7 +22,7 @@ var schemas = {
 */  
   
   user : mongoose.Schema({
-    name:"string", password:"string",
+    name:"string", email: "string", password:"string",
 	loginAttempts:"number", list: []
   })
 };
@@ -54,7 +54,7 @@ function POST(opType, dataObj) {
   if (opType == "user"){
 	
 	var newUser = {};
-	newUser["name"] = dataObj.data["name"];
+	newUser["email"] = dataObj.data["email"];
 	  
 	//see if the username already exists
 	models[opType].findOne(newUser, function(err, user){
@@ -308,7 +308,7 @@ var schema = new mongoose.Schema({
 
 var deal = mongoose.model('Deal', schema);
 
-var cronJob = cron.job('*/45 * * * * *', function(){
+var cronJob = cron.job('* */5 * * * *', function(){
 	
 	var currDate = new Date(moment().utcOffset(-300).format('MM/DD/YYYY'));
 
