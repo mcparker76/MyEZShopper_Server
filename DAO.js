@@ -80,8 +80,9 @@ function POST(opType, dataObj) {
 			  //check if password matches
 			  if (newUser.password == user.password && dataObj.data["type"]=="login"){
 				  console.log("PASSWORD and NAME MATCH!!");
-				  //todo reset number of login attempts
-				  completeResponse(dataObj, 200, "text", "" + user._id);
+
+				  //completeResponse(dataObj, 200, "text", "" + user._id);
+				  completeResponse(dataObj, 200, "text", "" + user);
 			  }else{
 				console.log("PASSWORD and NAME DO NOT MATCH!!");
 				//Password reset will be here
@@ -308,7 +309,7 @@ var schema = new mongoose.Schema({
 
 var deal = mongoose.model('Deal', schema);
 
-var cronJob = cron.job('* */5 * * * *', function(){
+var cronJob = cron.job('0 0 * * * *', function(){
 	
 	var currDate = new Date(moment().utcOffset(-300).format('MM/DD/YYYY'));
 
